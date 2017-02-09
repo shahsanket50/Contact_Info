@@ -2,6 +2,8 @@ package Forms;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -13,23 +15,33 @@ public class InitialFrame {
     private JLabel title;
     private JButton addContactButton;
     private JButton exitButton;
+    private static JFrame initialFrame;
 
     public InitialFrame() {
-        exitButton.addMouseListener(new MouseAdapter() {
+        addContactButton.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.exit(0);
-            }
-        });
-        addContactButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
+            public void actionPerformed(ActionEvent e) {
+                initialFrame.dispose();
                 CreateForm form = new CreateForm();
                 form.createEmptyForm();
             }
         });
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    public void generate() {
+        initialFrame = new JFrame("Contact Information");
+        initialFrame.setContentPane(new InitialFrame().start);
+        initialFrame.setDefaultCloseOperation(initialFrame.EXIT_ON_CLOSE);
+        initialFrame.setResizable(false);
+        initialFrame.setSize(200, 200);
+        initialFrame.setVisible(true);
+        initialFrame.setLocationRelativeTo(null);
     }
 
     {

@@ -1,68 +1,32 @@
 package Forms;
 
-import Compound.ContactInfo;
-import Compound.Information;
-import Compound.PersonalInfo;
-import Compound.ServiceInfo;
+import Compound.*;
 import Database.ToXML;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.List;
 
 public class CreateForm {
 	private static Information info = new Information();
-	private static JFrame initialFrame;
-	private static JFrame emptyFrame;
 	private static BasicForm basicForm;
+
 	public void initialForm() {
-		initialFrame = new JFrame("Contact Information");
-		initialFrame.setContentPane(new InitialFrame().start);
-		initialFrame.setDefaultCloseOperation(initialFrame.EXIT_ON_CLOSE);
-		initialFrame.setResizable(false);
-		initialFrame.setSize(200, 200);
-		initialFrame.setVisible(true);
+		InitialFrame initialFrame = new InitialFrame();
+		initialFrame.generate();
 	} 
 	
 	public void createEmptyForm() {
-		initialFrame.setVisible(false);
-		emptyFrame = new JFrame("BasicForm");
 		basicForm = new BasicForm();
-		emptyFrame.setContentPane(basicForm.form);
-		emptyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		emptyFrame.setResizable(false);
-		emptyFrame.setSize(600, 600);
-		emptyFrame.setVisible(true);
-	}
-
-	public JFrame getInitialFrame() {
-		return initialFrame;
-	}
-
-	public JFrame getEmptyFrame() {
-		return emptyFrame;
+		basicForm.generate(basicForm);
 	}
 
 	public BasicForm getBasicForm() {
 		return basicForm;
 	}
 
-	public Information getInfo() {
-		return info;
-	}
 
-	public void updateForm() {
-
-		
-	}
-
-	public void submitForm() {
-		if (basicForm.nameTextField.getText().isEmpty() || basicForm.organisationNameTextField.getText().isEmpty() ||
-				(basicForm.telephoneNoTextField.getText().isEmpty() && info.getContactInfo().getVoiceTelephone().isEmpty()) ||
-				info.getAddressInfo().isEmpty()) {
-			//JDialog jDialog = new JDialog(emptyFrame, "Empty Fields");
-			JOptionPane.showMessageDialog(emptyFrame, "Empty Fields");
-			return;
-		}
+	public boolean submitForm() {
 		ContactInfo contactInfo;
 		if (info.getContactInfo() == null)	{
 			contactInfo = new ContactInfo();
@@ -74,16 +38,28 @@ public class CreateForm {
 		ServiceInfo serviceInfo = new ServiceInfo();
 
 		personalInfo.setName(basicForm.nameTextField.getText());
-		personalInfo.setOrganization(basicForm.organisationNameTextField.getText());
-		if (!basicForm.positionTextField.getText().isEmpty()) personalInfo.setPosition(basicForm.positionTextField.getText());
-		if (!basicForm.telephoneNoTextField.getText().isEmpty()) contactInfo.getVoiceTelephone().add(basicForm.telephoneNoTextField.getText());
-		if (!basicForm.tDDTelephoneNoTextField.getText().isEmpty()) contactInfo.getTDD_TTYtelephone().add(basicForm.tDDTelephoneNoTextField.getText());
-		if (!basicForm.fascimileTelephoneNoTextField.getText().isEmpty()) contactInfo.getFascimileTelephone().add(basicForm.fascimileTelephoneNoTextField.getText());
-		//if (!basicForm.emailTextField.getText().isEmpty()) contactInfo.getEmails().add(basicForm.emailTextField.getText());
+		personalInfo.setOrganization(basicForm.organizationNameTextField.getText());
+		if (basicForm.positionTextFieldValid) personalInfo.setPosition(basicForm.positionTextField.getText());
+		if (basicForm.voiceTelephoneTextFieldValid) contactInfo.getVoiceTelephone().add(basicForm.voiceTelephoneTextField.getText());
+		if (basicForm.tDD_TTYTelephoneTextFieldValid) contactInfo.getTDD_TTYtelephone().add(basicForm.tDD_TTYTelephoneTextField.getText());
+		if (basicForm.facsimileTelephoneTextFieldValid) contactInfo.getFacsimileTelephone().add(basicForm.facsimileTelephoneTextField.getText());
+		if (basicForm.emailTextFieldValid) contactInfo.getEmails().add(basicForm.emailTextField.getText());
 
-		if (!basicForm.hoursTextField.getText().isEmpty()) serviceInfo.setHrsService(basicForm.hoursTextField.getText());
-		if (!basicForm.instructionTextField.getText().isEmpty()) serviceInfo.setInstruction(basicForm.instructionTextField.getText());
+		if (basicForm.hoursTextFieldValid) serviceInfo.setHrsService(basicForm.hoursTextField.getText());
+		if (basicForm.instructionTextFieldValid) serviceInfo.setInstruction(basicForm.instructionTextField.getText());
 
+		for (int i=1;i<basicForm.voiceTelephoneComboBox.getItemCount();i++) {
+			contactInfo.getVoiceTelephone().add(basicForm.voiceTelephoneComboBox.getItemAt(i).toString());
+		}
+		for (int i=1;i<basicForm.tDDTelephoneComboBox.getItemCount();i++) {
+			contactInfo.getVoiceTelephone().add(basicForm.tDDTelephoneComboBox.getItemAt(i).toString());
+		}
+		for (int i=1;i<basicForm.facsimileTelephoneComboBox.getItemCount();i++) {
+			contactInfo.getVoiceTelephone().add(basicForm.facsimileTelephoneComboBox.getItemAt(i).toString());
+		}
+		for (int i=1;i<basicForm.emailComboBox.getItemCount();i++) {
+			contactInfo.getVoiceTelephone().add(basicForm.emailComboBox.getItemAt(i).toString());
+		}
 		info.setPersonalInfo(personalInfo);
 		info.setContactInfo(contactInfo);
 		info.setServiceInfo(serviceInfo);
@@ -94,8 +70,25 @@ public class CreateForm {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		emptyFrame.dispose();
-		initialFrame.setVisible(true);
+		return true;
+	}
+
+	public void storeAddress(String type, String address, String city, String state, String country, String pincode) {
+		List<AddressInfo> addressInfoList = info.getAddressInfo();
+		AddressInfo addressInfo = new AddressInfo();
+		addressInfo.setAddress(address);
+		addressInfo.setCity(city);
+		addressInfo.setState(state);
+		addressInfo.setCountry(country);
+		addressInfo.setZipCode(pincode);
+		addressInfo.setAddressType(type);
+		addressInfoList.add(addressInfo);
+		info.setAddressInfo(addressInfoList);
+		basicForm.addressComboBox.addItem(address);
+	}
+
+	public void removeAddress(int index){
+		info.getAddressInfo().remove(index);
 	}
 
 	public static void main(String args[]){
