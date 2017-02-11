@@ -34,8 +34,10 @@ public class ToXML {
 				bw.write("<Name>" + info.getPersonalInfo().getName() + "</Name>\n");
 				addTabs(bw);
 				bw.write("<Organization>" + info.getPersonalInfo().getOrganization() + "</Organization>\n");
-				addTabs(bw);
-				bw.write("<Position>" + info.getPersonalInfo().getPosition() + "</Position>\n");
+				if(info.getPersonalInfo().getPosition() != null) {
+					addTabs(bw);
+					bw.write("<Position>" + info.getPersonalInfo().getPosition() + "</Position>\n");
+				}
 			tabs--;
 			addTabs(bw);
 			bw.write("</PersonalInformation>\n");
@@ -70,9 +72,9 @@ public class ToXML {
 				addTabs(bw);
 				bw.write("<TDD_TTYTelephone>" + info.getContactInfo().getTDD_TTYtelephone().get(i) + "</TDD_TTYTelephone>\n");
 			}
-			for(int i = 0; i < info.getContactInfo().getFascimileTelephone().size(); i++) {
+			for(int i = 0; i < info.getContactInfo().getFacsimileTelephone().size(); i++) {
 				addTabs(bw);
-				bw.write("<FascimileTelephone>" + info.getContactInfo().getFascimileTelephone().get(i) + "</FascimileTelephone>\n");
+				bw.write("<FascimileTelephone>" + info.getContactInfo().getFacsimileTelephone().get(i) + "</FascimileTelephone>\n");
 			}
 			for(int i = 0; i < info.getContactInfo().getEmails().size(); i++) {
 				addTabs(bw);
@@ -82,15 +84,21 @@ public class ToXML {
 			addTabs(bw);
 			bw.write("</ContactInfoInformation>\n");
 			addTabs(bw);
-			bw.write("<ServiceInfoInformation>\n");
-			tabs++;
-				addTabs(bw);
-				bw.write("<HrsService>" + info.getServiceInfo().getHrsService() + "</HrsService>\n");
-				addTabs(bw);
-				bw.write("<Instructions>" + info.getServiceInfo().getInstruction() + "</Instructions>\n");
+			if(info.getServiceInfo().getHrsService() != null || info.getServiceInfo().getInstruction() != null) {
+				bw.write("<ServiceInfoInformation>\n");
+				tabs++;
+				if(info.getServiceInfo().getHrsService() != null) {
+					addTabs(bw);
+					bw.write("<HrsService>" + info.getServiceInfo().getHrsService() + "</HrsService>\n");
+				}
+				if(info.getServiceInfo().getInstruction() != null) {
+					addTabs(bw);
+					bw.write("<Instructions>" + info.getServiceInfo().getInstruction() + "</Instructions>\n");
+				}
 				tabs--;
-			addTabs(bw);
-			bw.write("</ServiceInfoInformation>\n");
+				addTabs(bw);
+				bw.write("</ServiceInfoInformation>\n");
+			}
 		tabs--;
 		addTabs(bw);
 		bw.write("</ContactInformation>");

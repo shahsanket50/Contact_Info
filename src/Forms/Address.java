@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sanket on 05-02-2017.
@@ -29,6 +30,11 @@ public class Address {
     private JButton addButton;
     private JLabel addressDetailsLabel;
     private static JFrame addressFrame;
+    private Boolean addressTextFieldValid = false;
+    private Boolean stateTextFieldValid = false;
+    private Boolean cityTextFieldValid = false;
+    private Boolean countryTextFieldValid = false;
+    private Boolean pincodeTextFieldValid = false;
 
     public Address() {
         cancelButton.addActionListener(new ActionListener() {
@@ -43,14 +49,22 @@ public class Address {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CreateForm createForm = new CreateForm();
-                if (cityTextField.getText().isEmpty() || stateTextField.getText().isEmpty() || countryTextField.getText().isEmpty() || pincodeTextField.getText().isEmpty() || addressTextField.getText().isEmpty())
+                if (!addressTextFieldValid || !cityTextFieldValid || !stateTextFieldValid || !countryTextFieldValid || !pincodeTextFieldValid) {
+                    if (!addressTextFieldValid) addressTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (!cityTextFieldValid) cityTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (!stateTextFieldValid) stateTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (!countryTextFieldValid) countryTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (!pincodeTextFieldValid) pincodeTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
                     JOptionPane.showMessageDialog(addressFrame, "Empty Fields");
+                }
 
-                createForm.storeAddress(addressTypecomboBox.getSelectedItem().toString(), addressTextField.getText(),
-                        cityTextField.getText(), stateTextField.getText(), countryTextField.getText(), pincodeTextField.getText());
+                else {
+                    createForm.storeAddress(addressTypecomboBox.getSelectedItem().toString(), addressTextField.getText(),
+                            cityTextField.getText(), stateTextField.getText(), countryTextField.getText(), pincodeTextField.getText());
 
-                addressFrame.dispose();
-                createForm.getBasicForm().addAddress.setEnabled(true);
+                    addressFrame.dispose();
+                    createForm.getBasicForm().addAddress.setEnabled(true);
+                }
             }
         });
         addressTextField.addFocusListener(new FocusAdapter() {
@@ -58,6 +72,7 @@ public class Address {
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 if (addressTextField.getText().equals("Enter Address")) addressTextField.setText("");
+                addressTextField.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 
             }
         });
@@ -65,7 +80,17 @@ public class Address {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (addressTextField.getText().length() == 0) addressTextField.setText("Enter Address");
+                if (Pattern.matches("([a-zA-Z0-9/-][a-zA-Z0-9/-]*[.]?[,]?[ ]?)*[a-zA-Z0-9/-][a-zA-Z0-9/-]*[.]?", addressTextField.getText())) {
+                    addressTextFieldValid = true;
+                    addressTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+                } else if (addressTextField.getText().length() == 0) {
+                    addressTextFieldValid = false;
+                    addressTextField.setText("Enter Address");
+                    addressTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                } else {
+                    addressTextFieldValid = false;
+                    addressTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                }
             }
         });
         cityTextField.addFocusListener(new FocusAdapter() {
@@ -73,13 +98,24 @@ public class Address {
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 if (cityTextField.getText().equals("Enter City")) cityTextField.setText("");
+                cityTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
             }
         });
         cityTextField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (cityTextField.getText().length() == 0) cityTextField.setText("Enter City");
+                if (Pattern.matches("([A-Z][a-zA-Z]*[.]?[ ]?)*[a-zA-Z][a-zA-Z]*[.]?", cityTextField.getText())) {
+                    cityTextFieldValid = true;
+                    cityTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+                } else if (cityTextField.getText().length() == 0) {
+                    cityTextFieldValid = false;
+                    cityTextField.setText("Enter City");
+                    cityTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                } else {
+                    cityTextFieldValid = false;
+                    cityTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                }
             }
         });
         stateTextField.addFocusListener(new FocusAdapter() {
@@ -87,13 +123,24 @@ public class Address {
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 if (stateTextField.getText().equals("Enter State")) stateTextField.setText("");
+                stateTextField.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
             }
         });
         stateTextField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (stateTextField.getText().length() == 0) stateTextField.setText("Enter State");
+                if (Pattern.matches("([A-Z][a-zA-Z]*[.]?[ ]?)*[a-zA-Z][a-zA-Z]*[.]?", stateTextField.getText())) {
+                    stateTextFieldValid = true;
+                    stateTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+                } else if (stateTextField.getText().length() == 0) {
+                    stateTextFieldValid = false;
+                    stateTextField.setText("Enter State");
+                    stateTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                } else {
+                    stateTextFieldValid = false;
+                    stateTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                }
             }
         });
         countryTextField.addFocusListener(new FocusAdapter() {
@@ -101,13 +148,24 @@ public class Address {
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 if (countryTextField.getText().equals("Enter Country")) countryTextField.setText("");
+                countryTextField.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
             }
         });
         countryTextField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (countryTextField.getText().length() == 0) countryTextField.setText("Enter Country");
+                if (Pattern.matches("([A-Z][a-zA-Z]*[.]?[ ]?)*[a-zA-Z][a-zA-Z]*[.]?", countryTextField.getText())) {
+                    countryTextFieldValid = true;
+                    countryTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+                } else if (countryTextField.getText().length() == 0) {
+                    countryTextFieldValid = false;
+                    countryTextField.setText("Enter Country");
+                    countryTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                } else {
+                    countryTextFieldValid = false;
+                    countryTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                }
             }
         });
         pincodeTextField.addFocusListener(new FocusAdapter() {
@@ -115,13 +173,25 @@ public class Address {
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 if (pincodeTextField.getText().equals("Enter PinCode")) pincodeTextField.setText("");
+                pincodeTextField.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
             }
         });
         pincodeTextField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (pincodeTextField.getText().length() == 0) pincodeTextField.setText("Enter PinCode");
+                if (Pattern.matches("^[0-9]*", pincodeTextField.getText()) && pincodeTextField.getText().length() == 6) {
+                    pincodeTextFieldValid = true;
+                    pincodeTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+                } else if (pincodeTextField.getText().length() == 0) {
+                    pincodeTextFieldValid = false;
+                    pincodeTextField.setText("Enter PinCode");
+                    pincodeTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                } else {
+                    pincodeTextFieldValid = false;
+                    pincodeTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                }
+                ;
             }
         });
     }
@@ -134,6 +204,16 @@ public class Address {
         addressFrame.setSize(400, 400);
         addressFrame.setVisible(true);
         addressFrame.setLocationRelativeTo(null);
+        setAllBorder();
+    }
+
+    public void setAllBorder() {
+        addressTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        cityTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        stateTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        countryTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        pincodeTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+
     }
 
     {

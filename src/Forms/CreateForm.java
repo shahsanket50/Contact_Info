@@ -25,6 +25,9 @@ public class CreateForm {
 		return basicForm;
 	}
 
+	public Information getInfo() {
+		return info;
+	}
 
 	public boolean submitForm() {
 		ContactInfo contactInfo;

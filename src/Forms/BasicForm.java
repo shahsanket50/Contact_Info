@@ -1,6 +1,9 @@
 package Forms;
 
+import org.w3c.dom.css.RGBColor;
+
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.Color;
@@ -68,6 +71,9 @@ public class BasicForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addAddress.setEnabled(false);
+                Color c = new Color(51, 51, 51);
+                addAddress.setForeground(c);
+                //addAddress.setBorder(BorderFactory.createLineBorder(Color.RED));
                 Address address = new Address();
                 address.generate();
             }
@@ -93,10 +99,16 @@ public class BasicForm {
                         || ((LineBorder) emailTextField.getBorder()).getLineColor().equals(Color.RED)
                         || ((LineBorder) hoursTextField.getBorder()).getLineColor().equals(Color.RED)
                         || (((LineBorder) voiceTelephoneTextField.getBorder()).getLineColor().equals(Color.RED) && voiceTelephoneComboBox.getItemCount() == 1)
-                        )
+                        ) {
+                    if (!nameTextFieldValid) nameTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (!organizationNameTextFieldValid)
+                        organizationNameTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (!voiceTelephoneTextFieldValid && voiceTelephoneComboBox.getItemCount() == 1)
+                        voiceTelephoneTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    if (addressComboBox.getItemCount() == 1)
+                        addAddress.setForeground(Color.RED);
                     JOptionPane.showMessageDialog(emptyFrame, "TextBoxes Marked in RED are either EMPTY or INCORRECT");
-
-                else {
+                } else {
                     createForm.submitForm();
                     emptyFrame.dispose();
                     createForm.initialForm();
@@ -115,7 +127,7 @@ public class BasicForm {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (Pattern.matches("([a-zA-Z][a-zA-Z]*[.]?[ ]?)*[a-zA-Z][a-zA-Z]*", nameTextField.getText())) {
+                if (Pattern.matches("([a-zA-Z][a-zA-Z]*[.]?[ ]?)*[a-zA-Z][a-zA-Z]*[.]?", nameTextField.getText())) {
                     nameTextFieldValid = true;
                     nameTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
                 } else if (nameTextField.getText().length() == 0) {
@@ -141,7 +153,7 @@ public class BasicForm {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (Pattern.matches("([a-zA-Z0-9][a-zA-Z0-9]*[.]?[ ]?)*[a-zA-Z0-9][a-zA-Z0-9]*", organizationNameTextField.getText())) {
+                if (Pattern.matches("([a-zA-Z0-9][a-zA-Z0-9]*[.]?[ ]?)*[a-zA-Z0-9][a-zA-Z0-9]*[.]?", organizationNameTextField.getText())) {
                     organizationNameTextFieldValid = true;
                     organizationNameTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
                 } else if (organizationNameTextField.getText().length() == 0) {
@@ -166,7 +178,7 @@ public class BasicForm {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (Pattern.matches("([a-zA-Z0-9][a-zA-Z0-9]*[.]?[ ]?)*[a-zA-Z0-9][a-zA-Z0-9]*", positionTextField.getText())) {
+                if (Pattern.matches("([a-zA-Z0-9][a-zA-Z0-9]*[.]?[ ]?)*[a-zA-Z0-9][a-zA-Z0-9]*[.]?", positionTextField.getText())) {
                     positionTextFieldValid = true;
                     positionTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
                 } else if (positionTextField.getText().length() == 0) {
@@ -222,6 +234,7 @@ public class BasicForm {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
+                tDD_TTYTelephoneTextField.getBorder().getClass();
                 if (Pattern.matches("[1-9][0-9]*", tDD_TTYTelephoneTextField.getText()) && tDD_TTYTelephoneTextField.getText().length() == 10) {
                     tDD_TTYTelephoneTextFieldValid = true;
                     tDD_TTYTelephoneTextField.setBorder(BorderFactory.createLineBorder(Color.GREEN));
@@ -423,6 +436,19 @@ public class BasicForm {
         emptyFrame.setSize(600, 700);
         emptyFrame.setVisible(true);
         emptyFrame.setLocationRelativeTo(null);
+        setBorder();
+    }
+
+    public void setBorder() {
+        nameTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        organizationNameTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        positionTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        voiceTelephoneTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        tDD_TTYTelephoneTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        facsimileTelephoneTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        emailTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        hoursTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
+        instructionTextField.setBorder(BorderFactory.createLineBorder(Color.gray));
     }
 
     {
